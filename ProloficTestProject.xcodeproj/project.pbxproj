@@ -15,6 +15,8 @@
 		CFC20C511B1B62710008CFD6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C4F1B1B62710008CFD6 /* LaunchScreen.xib */; };
 		CFC20C5D1B1B62710008CFD6 /* ProloficTestProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C5C1B1B62710008CFD6 /* ProloficTestProjectTests.m */; };
 		CFC20C681B1B65980008CFD6 /* Add.png in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C671B1B65980008CFD6 /* Add.png */; };
+		CFC20C6D1B1B8D500008CFD6 /* BookDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C6C1B1B8D500008CFD6 /* BookDetails.m */; };
+		CFC20C701B1B8EAF0008CFD6 /* BookDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,10 @@
 		CFC20C5B1B1B62710008CFD6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFC20C5C1B1B62710008CFD6 /* ProloficTestProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProloficTestProjectTests.m; sourceTree = "<group>"; };
 		CFC20C671B1B65980008CFD6 /* Add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Add.png; sourceTree = "<group>"; };
+		CFC20C6B1B1B8D500008CFD6 /* BookDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookDetails.h; sourceTree = "<group>"; };
+		CFC20C6C1B1B8D500008CFD6 /* BookDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookDetails.m; sourceTree = "<group>"; };
+		CFC20C6E1B1B8EAF0008CFD6 /* BookDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookDetailsViewController.h; sourceTree = "<group>"; };
+		CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookDetailsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,11 +89,11 @@
 		CFC20C3F1B1B62710008CFD6 /* ProloficTestProject */ = {
 			isa = PBXGroup;
 			children = (
+				CFC20C6A1B1B8D1F0008CFD6 /* Models */,
+				CFC20C691B1B8D190008CFD6 /* Controllers */,
 				CFC20C661B1B65890008CFD6 /* Images */,
 				CFC20C441B1B62710008CFD6 /* AppDelegate.h */,
 				CFC20C451B1B62710008CFD6 /* AppDelegate.m */,
-				CFC20C471B1B62710008CFD6 /* ViewController.h */,
-				CFC20C481B1B62710008CFD6 /* ViewController.m */,
 				CFC20C4A1B1B62710008CFD6 /* Main.storyboard */,
 				CFC20C4D1B1B62710008CFD6 /* Images.xcassets */,
 				CFC20C4F1B1B62710008CFD6 /* LaunchScreen.xib */,
@@ -128,6 +134,26 @@
 				CFC20C671B1B65980008CFD6 /* Add.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		CFC20C691B1B8D190008CFD6 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				CFC20C471B1B62710008CFD6 /* ViewController.h */,
+				CFC20C481B1B62710008CFD6 /* ViewController.m */,
+				CFC20C6E1B1B8EAF0008CFD6 /* BookDetailsViewController.h */,
+				CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		CFC20C6A1B1B8D1F0008CFD6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CFC20C6B1B1B8D500008CFD6 /* BookDetails.h */,
+				CFC20C6C1B1B8D500008CFD6 /* BookDetails.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,6 +258,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFC20C491B1B62710008CFD6 /* ViewController.m in Sources */,
+				CFC20C701B1B8EAF0008CFD6 /* BookDetailsViewController.m in Sources */,
+				CFC20C6D1B1B8D500008CFD6 /* BookDetails.m in Sources */,
 				CFC20C461B1B62710008CFD6 /* AppDelegate.m in Sources */,
 				CFC20C431B1B62710008CFD6 /* main.m in Sources */,
 			);

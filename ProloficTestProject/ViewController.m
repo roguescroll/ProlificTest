@@ -7,27 +7,16 @@
 //
 
 #import "ViewController.h"
-
-/**
- A modal object that contains the titleName of the book.
- */
-@interface BookItem : NSObject
-
-@property (nonatomic, copy) NSString *titleName;
-@property (nonatomic, copy) NSString *authorName;
-
-@end
-
-@implementation BookItem
-
-
-@end
+#import "BookDetails.h"
+#import "BookDetailsViewController.h"
 
 @interface ViewController ()<NSURLConnectionDelegate>
 
 @property (nonatomic, strong) NSMutableData *responseData;
 
 @property (nonatomic, strong) NSMutableArray *booksArray;
+
+@property (nonatomic, strong) BookDetails *currentlySelectedBook;
 
 @end
 
@@ -73,11 +62,31 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"BookCell"];
     }
     
-    BookItem *bookItem = [self.booksArray objectAtIndex:indexPath.row];
-    cell.textLabel.text = bookItem.titleName;
-    cell.detailTextLabel.text = bookItem.authorName;
+    BookDetails *bookDetailsItem = [self.booksArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = bookDetailsItem.titleName;
+    cell.detailTextLabel.text = bookDetailsItem.authorName;
     
     return cell;
+}
+
+#pragma mark - Table view delegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.currentlySelectedBook = [self.booksArray objectAtIndex:indexPath.row];
+    [self performSegueWithIdentifier:@"showBookDetails" sender:self];
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"showBookDetails"])
+    {
+        BookDetailsViewController *bookDetailsController = [segue destinationViewController];
+        bookDetailsController.selectedBookDetail = self.currentlySelectedBook;
+    }
 }
 
 #pragma mark - Private Methods
@@ -137,10 +146,15 @@
         
         for (NSDictionary *bookDict in booksJsonArray)
         {
-            BookItem *bookItem = [BookItem new];
-            bookItem.titleName = [bookDict objectForKey:@"title"];
-            bookItem.authorName = [bookDict objectForKey:@"author"];
-            [self.booksArray addObject:bookItem];
+            BookDetails *bookDetailsItem = [BookDetails new];
+            bookDetailsItem.titleName = [bookDict objectForKey:@"title"];
+            bookDetailsItem.authorName = [bookDict objectForKey:@"author"];
+            bookDetailsItem.lastCheckedOut = [bookDict objectForKey:@"lastCheckedOut"];
+            bookDetailsItem.lastCheckedOutBy = [bookDict objectForKey:@"lastCheckedOutBy"];
+            bookDetailsItem.publisher = [bookDict objectForKey:@"publisher"];
+            bookDetailsItem.url = [bookDict objectForKey:@"url"];
+            
+            [self.booksArray addObject:bookDetailsItem];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{

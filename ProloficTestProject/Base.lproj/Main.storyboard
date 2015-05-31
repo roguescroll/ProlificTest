@@ -32,6 +32,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="NLr-2M-7hh" kind="show" identifier="showBookDetails" id="ec8-T0-ACh"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -44,6 +47,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f4f-Cf-8g6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="899" y="332"/>
+        </scene>
+        <!--Book Details View Controller-->
+        <scene sceneID="YfF-2S-uo6">
+            <objects>
+                <viewController id="NLr-2M-7hh" customClass="BookDetailsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="K54-uh-gfQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="f56-bk-ibp"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="saV-ez-SAI">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r4i-aD-hqK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1587" y="332"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="XNb-wp-hJV">
