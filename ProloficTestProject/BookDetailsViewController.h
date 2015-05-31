@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BookDetails.h"
 
 @interface BookDetailsViewController : UIViewController
 
-@property (nonatomic, strong) BookDetails *selectedBookDetail;
+@property (nonatomic, copy) NSString *selectedBookDetailsURL;
 
 @end

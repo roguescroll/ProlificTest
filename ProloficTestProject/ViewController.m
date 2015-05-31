@@ -85,7 +85,7 @@
     if ([[segue identifier] isEqualToString:@"showBookDetails"])
     {
         BookDetailsViewController *bookDetailsController = [segue destinationViewController];
-        bookDetailsController.selectedBookDetail = self.currentlySelectedBook;
+        bookDetailsController.selectedBookDetailsURL = self.currentlySelectedBook.url;
     }
 }
 
@@ -153,6 +153,7 @@
             bookDetailsItem.lastCheckedOutBy = [bookDict objectForKey:@"lastCheckedOutBy"];
             bookDetailsItem.publisher = [bookDict objectForKey:@"publisher"];
             bookDetailsItem.url = [bookDict objectForKey:@"url"];
+            bookDetailsItem.categories = [bookDict objectForKey:@"categories"];
             
             [self.booksArray addObject:bookDetailsItem];
         }

@@ -16,5 +16,6 @@
 @property (nonatomic, copy) NSString *lastCheckedOutBy;
 @property (nonatomic, copy) NSString *publisher;
 @property (nonatomic, copy) NSString *url;
+@property (nonatomic, copy) NSString *categories;
 
 @end
