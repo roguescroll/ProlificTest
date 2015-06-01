@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddBookViewController">
+            <connections>
+                <outlet property="authorField" destination="4J1-Tj-mQt" id="dkv-l0-xzv"/>
+                <outlet property="categoriesField" destination="DH4-cN-BhJ" id="FJB-XC-ePH"/>
+                <outlet property="publisherField" destination="pR2-5U-TUl" id="dqU-fq-tnP"/>
+                <outlet property="titleField" destination="YCa-VA-a9k" id="zoG-u4-9Eb"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Book Title" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YCa-VA-a9k">
+                    <rect key="frame" x="10" y="85" width="580" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Author" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4J1-Tj-mQt">
+                    <rect key="frame" x="10" y="130" width="580" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Publisher" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pR2-5U-TUl">
+                    <rect key="frame" x="10" y="175" width="580" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Categories" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DH4-cN-BhJ">
+                    <rect key="frame" x="10" y="220" width="580" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P68-DL-C9V">
+                    <rect key="frame" x="10" y="270" width="580" height="30"/>
+                    <state key="normal" title="Submit">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="addBook:" destination="-1" eventType="touchUpInside" id="ASS-Qx-Gwh"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="YCa-VA-a9k" firstAttribute="leading" secondItem="4J1-Tj-mQt" secondAttribute="leading" id="9ir-BK-yFd"/>
+                <constraint firstAttribute="trailing" secondItem="YCa-VA-a9k" secondAttribute="trailing" constant="10" id="Ahx-v3-SZJ"/>
+                <constraint firstItem="P68-DL-C9V" firstAttribute="top" secondItem="DH4-cN-BhJ" secondAttribute="bottom" constant="20" id="D8y-Lo-Zcj"/>
+                <constraint firstItem="YCa-VA-a9k" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="85" id="Dq1-1v-Eg4"/>
+                <constraint firstItem="DH4-cN-BhJ" firstAttribute="top" secondItem="pR2-5U-TUl" secondAttribute="bottom" constant="15" id="F6i-Kc-IqH"/>
+                <constraint firstItem="DH4-cN-BhJ" firstAttribute="leading" secondItem="P68-DL-C9V" secondAttribute="leading" id="T9w-DS-Zrl"/>
+                <constraint firstItem="YCa-VA-a9k" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="aNc-eY-oLB"/>
+                <constraint firstAttribute="trailing" secondItem="pR2-5U-TUl" secondAttribute="trailing" constant="10" id="cd8-h7-KYH"/>
+                <constraint firstItem="DH4-cN-BhJ" firstAttribute="leading" secondItem="pR2-5U-TUl" secondAttribute="leading" id="dd1-oc-Pmw"/>
+                <constraint firstAttribute="trailing" secondItem="DH4-cN-BhJ" secondAttribute="trailing" constant="10" id="gJu-Qx-nWj"/>
+                <constraint firstItem="4J1-Tj-mQt" firstAttribute="top" secondItem="YCa-VA-a9k" secondAttribute="bottom" constant="15" id="hct-Jh-vsv"/>
+                <constraint firstItem="4J1-Tj-mQt" firstAttribute="leading" secondItem="pR2-5U-TUl" secondAttribute="leading" id="kCr-KU-3Gp"/>
+                <constraint firstItem="pR2-5U-TUl" firstAttribute="top" secondItem="4J1-Tj-mQt" secondAttribute="bottom" constant="15" id="lxH-ec-scA"/>
+                <constraint firstAttribute="trailing" secondItem="P68-DL-C9V" secondAttribute="trailing" constant="10" id="vwh-i2-BGP"/>
+                <constraint firstAttribute="trailing" secondItem="4J1-Tj-mQt" secondAttribute="trailing" constant="10" id="wCy-PD-fAI"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

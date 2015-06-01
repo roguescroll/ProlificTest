@@ -17,6 +17,8 @@
 		CFC20C681B1B65980008CFD6 /* Add.png in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C671B1B65980008CFD6 /* Add.png */; };
 		CFC20C6D1B1B8D500008CFD6 /* BookDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C6C1B1B8D500008CFD6 /* BookDetails.m */; };
 		CFC20C701B1B8EAF0008CFD6 /* BookDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */; };
+		CFC20C741B1BD05F0008CFD6 /* AddBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C721B1BD05F0008CFD6 /* AddBookViewController.m */; };
+		CFC20C751B1BD05F0008CFD6 /* AddBookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C731B1BD05F0008CFD6 /* AddBookViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,9 @@
 		CFC20C6C1B1B8D500008CFD6 /* BookDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookDetails.m; sourceTree = "<group>"; };
 		CFC20C6E1B1B8EAF0008CFD6 /* BookDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookDetailsViewController.h; sourceTree = "<group>"; };
 		CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookDetailsViewController.m; sourceTree = "<group>"; };
+		CFC20C711B1BD05F0008CFD6 /* AddBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddBookViewController.h; sourceTree = "<group>"; };
+		CFC20C721B1BD05F0008CFD6 /* AddBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddBookViewController.m; sourceTree = "<group>"; };
+		CFC20C731B1BD05F0008CFD6 /* AddBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddBookViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +148,9 @@
 				CFC20C481B1B62710008CFD6 /* ViewController.m */,
 				CFC20C6E1B1B8EAF0008CFD6 /* BookDetailsViewController.h */,
 				CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */,
+				CFC20C711B1BD05F0008CFD6 /* AddBookViewController.h */,
+				CFC20C721B1BD05F0008CFD6 /* AddBookViewController.m */,
+				CFC20C731B1BD05F0008CFD6 /* AddBookViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -240,6 +248,7 @@
 				CFC20C4C1B1B62710008CFD6 /* Main.storyboard in Resources */,
 				CFC20C511B1B62710008CFD6 /* LaunchScreen.xib in Resources */,
 				CFC20C4E1B1B62710008CFD6 /* Images.xcassets in Resources */,
+				CFC20C751B1BD05F0008CFD6 /* AddBookViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +271,7 @@
 				CFC20C6D1B1B8D500008CFD6 /* BookDetails.m in Sources */,
 				CFC20C461B1B62710008CFD6 /* AppDelegate.m in Sources */,
 				CFC20C431B1B62710008CFD6 /* main.m in Sources */,
+				CFC20C741B1BD05F0008CFD6 /* AddBookViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

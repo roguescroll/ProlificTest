@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "BookDetails.h"
 #import "BookDetailsViewController.h"
+#import "AddBookViewController.h"
 
 @interface ViewController ()<NSURLConnectionDelegate>
 
@@ -41,7 +42,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
     return 1;
 }
 
@@ -103,7 +103,8 @@
 
 - (void)addBook
 {
-    
+    AddBookViewController *addBookController = [[AddBookViewController alloc] init];
+    [self.navigationController pushViewController:addBookController animated:YES];
 }
 
 #pragma mark NSURLConnection Delegate Methods
