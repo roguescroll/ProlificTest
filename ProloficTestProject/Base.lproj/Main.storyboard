@@ -133,7 +133,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r4i-aD-hqK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1618" y="1069"/>
+            <point key="canvasLocation" x="899" y="1145"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="XNb-wp-hJV">

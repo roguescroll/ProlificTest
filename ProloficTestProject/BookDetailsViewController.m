@@ -8,6 +8,7 @@
 
 #import "BookDetailsViewController.h"
 #import "BookDetails.h"
+#import "MBProgressHUD.h"
 
 @interface BookDetailsViewController ()<NSURLConnectionDelegate>
 
@@ -18,6 +19,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *lastCheckedoutLabel;
 
 @property (nonatomic, strong) NSMutableData *responseData;
+
+@property (nonatomic, strong) BookDetails *bookDetails;
 
 @end
 
@@ -40,7 +43,24 @@
 
 - (IBAction)checkout:(id)sender
 {
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:@"Please Enter your name"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+     {
+         textField.placeholder = @"Name";
+     }];
     
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+                                                              UITextField *nameField = alert.textFields[0];
+                                                              [self checkoutBookWithName:nameField.text];
+                                                          }];
+    [alert addAction:defaultAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - Private Methods
@@ -67,6 +87,48 @@
                                                                              applicationActivities:nil];
     
     [self presentViewController:activityVC animated:YES completion:nil];
+}
+
+- (void)setUpBookDetails
+{
+    self.titleLabel.text = self.bookDetails.titleName;
+    self.authorLabel.text = self.bookDetails.authorName;
+    self.publisherLabel.text = [NSString stringWithFormat:@"Publisher: %@", self.bookDetails.publisher];
+    self.tagsLabel.text = [NSString stringWithFormat:@"Tags: %@", self.bookDetails.categories];
+    
+    if ([self.bookDetails.lastCheckedOut length] > 0 && [self.bookDetails.lastCheckedOutBy length] > 0)
+    {
+        NSString *combinedLastCheckoutString = [NSString stringWithFormat:@"%@ @ %@", self.bookDetails.lastCheckedOutBy,
+                                                self.bookDetails.lastCheckedOut];
+        self.lastCheckedoutLabel.text = [NSString stringWithFormat:@"Last Checked Out : %@", combinedLastCheckoutString];
+    }
+    else
+    {
+        self.lastCheckedoutLabel.text = @"Last Checked Out: ";
+    }
+
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
+- (void)checkoutBookWithName:(NSString *)name
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Checking Out Book";
+    
+    NSString *baseURL = @"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0";
+    NSString *requestString = [baseURL stringByAppendingString:self.selectedBookDetailsURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest
+                                    requestWithURL:[NSURL URLWithString:requestString]];
+    
+    NSDictionary *requestData = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                 name, @"lastCheckedOutBy",
+                                 nil];
+    NSError *error;
+    NSData *putData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&error];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    [request setHTTPBody:putData];
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 #pragma mark NSURLConnection Delegate Methods
@@ -105,41 +167,54 @@
     
     if (!jsonParsingError && bookDetailDict)
     {
-        self.titleLabel.text = [bookDetailDict objectForKey:@"title"];
-        self.authorLabel.text = [bookDetailDict objectForKey:@"author"];
+        self.bookDetails = [BookDetails new];
+        
+        self.bookDetails.titleName = [bookDetailDict objectForKey:@"title"];
+        self.bookDetails.authorName = [bookDetailDict objectForKey:@"author"];
         
         NSString *publisherString = [bookDetailDict objectForKey:@"publisher"];
         if (publisherString && publisherString != (id)[NSNull null])
         {
-            self.publisherLabel.text = [NSString stringWithFormat:@"Publisher: %@", publisherString];
+            self.bookDetails.publisher = publisherString;
         }
         else
         {
-            self.publisherLabel.text = [NSString stringWithFormat:@"Publisher: Unknown"];
+            self.bookDetails.publisher = @"Unknown";
         }
         
         NSString *tagsString = [bookDetailDict objectForKey:@"categories"];
         if (tagsString && tagsString != (id)[NSNull null])
         {
-            self.tagsLabel.text = [NSString stringWithFormat:@"Tags: %@", tagsString];
+            self.bookDetails.categories = tagsString;
         }
         else
         {
-            self.tagsLabel.text = @"Tags: -";
+            self.bookDetails.categories = @"-";
         }
         
         NSString *lastCheckedOutByString = [bookDetailDict objectForKey:@"lastCheckedOutBy"];
         if (lastCheckedOutByString && lastCheckedOutByString != (id)[NSNull null])
         {
-            NSString *combinedLastCheckoutString = [NSString stringWithFormat:@"%@ @ %@", [bookDetailDict objectForKey:@"lastCheckedOutBy"], [bookDetailDict objectForKey:@"lastCheckedOut"]];
+            self.bookDetails.lastCheckedOutBy = lastCheckedOutByString;
             
-            self.lastCheckedoutLabel.text = [NSString stringWithFormat:@"Last Checked Out : %@", combinedLastCheckoutString];
         }
         else
         {
-            self.lastCheckedoutLabel.text = @"Last Checked Out: -";
+            self.bookDetails.lastCheckedOutBy = @"";
         }
         
+        NSString *lastCheckedOutString = [bookDetailDict objectForKey:@"lastCheckedOut"];
+        if (lastCheckedOutString && lastCheckedOutString != (id)[NSNull null])
+        {
+            self.bookDetails.lastCheckedOut = lastCheckedOutString;
+            
+        }
+        else
+        {
+            self.bookDetails.lastCheckedOut = @"";
+        }
+        
+        [self setUpBookDetails];
     }
 }
 

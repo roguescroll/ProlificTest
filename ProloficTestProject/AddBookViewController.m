@@ -7,6 +7,7 @@
 //
 
 #import "AddBookViewController.h"
+#import "MBProgressHUD.h"
 
 @interface AddBookViewController ()
 
@@ -37,6 +38,9 @@
 {
     if ([self fieldsValid])
     {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Adding Book";
+        
         NSMutableURLRequest *request = [NSMutableURLRequest
                                         requestWithURL:[NSURL URLWithString:@"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0/books/"]];
         
@@ -148,12 +152,10 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     // The request is complete and data has been received
-    // You can parse the stuff in your instance variable now
     
-    NSError *jsonParsingError;
-    NSDictionary *addBookDict = [NSJSONSerialization JSONObjectWithData:self.responseData
-                                                                   options:0
-                                                                     error:&jsonParsingError];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    [self.navigationController popViewControllerAnimated:YES];
     
 }
 

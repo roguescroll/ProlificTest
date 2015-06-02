@@ -10,6 +10,7 @@
 #import "BookDetails.h"
 #import "BookDetailsViewController.h"
 #import "AddBookViewController.h"
+#import "MBProgressHUD.h"
 
 @interface ViewController ()<NSURLConnectionDelegate>
 
@@ -19,6 +20,10 @@
 
 @property (nonatomic, strong) BookDetails *currentlySelectedBook;
 
+@property (nonatomic, copy) NSString *baseURL;
+
+@property (nonatomic) NSInteger responseStatusCode;
+
 @end
 
 @implementation ViewController
@@ -27,14 +32,24 @@
 {
     [super viewDidLoad];
     
+    self.baseURL = @"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0";
+    
     self.title = @"Books";
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Add.png"]
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Book"
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:self
                                                                             action:@selector(addBook)];
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Clear Books"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(clearAllBooks)];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
     [self fetchBooksList];
 }
 
@@ -62,9 +77,16 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"BookCell"];
     }
     
-    BookDetails *bookDetailsItem = [self.booksArray objectAtIndex:indexPath.row];
-    cell.textLabel.text = bookDetailsItem.titleName;
-    cell.detailTextLabel.text = bookDetailsItem.authorName;
+    if ([self.booksArray count] > 0)
+    {
+        BookDetails *bookDetailsItem = [self.booksArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = bookDetailsItem.titleName;
+        cell.detailTextLabel.text = bookDetailsItem.authorName;
+    }
+    else
+    {
+        cell.textLabel.text = @"No Books Currently Listed";
+    }
     
     return cell;
 }
@@ -75,6 +97,29 @@
 {
     self.currentlySelectedBook = [self.booksArray objectAtIndex:indexPath.row];
     [self performSegueWithIdentifier:@"showBookDetails" sender:self];
+}
+
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    BookDetails *bookDetailItem = [self.booksArray objectAtIndex:indexPath.row];
+    
+    // Create the request
+    NSString *requestURL = [self.baseURL stringByAppendingString:bookDetailItem.url];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL:[NSURL URLWithString:requestURL]];
+    [request setHTTPMethod:@"DELETE"];
+    
+    // Create url connection and fire request
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        [self.booksArray removeObjectAtIndex:indexPath.row];
+        
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 #pragma mark - Navigation
@@ -93,9 +138,13 @@
 
 - (void)fetchBooksList
 {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Fetching Book Titles";
+    
     // Create the request.
+    NSString *requestURL = [self.baseURL stringByAppendingString:@"/books"];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL
-                                                          URLWithString:@"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0/books"]];
+                                                          URLWithString:requestURL]];
     
     // Create url connection and fire request
     (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
@@ -107,6 +156,19 @@
     [self.navigationController pushViewController:addBookController animated:YES];
 }
 
+- (void)clearAllBooks
+{
+    // Create the request
+    NSString *requestURL = [self.baseURL stringByAppendingString:@"/clean"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL:[NSURL URLWithString:requestURL]];
+    [request setHTTPMethod:@"DELETE"];
+    
+    // Create url connection and fire request
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
 #pragma mark NSURLConnection Delegate Methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -116,6 +178,9 @@
     // Furthermore, this method is called each time there is a redirect so reinitializing it
     // also serves to clear it
     self.responseData = [[NSMutableData alloc] init];
+    
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
+    self.responseStatusCode = httpResponse.statusCode;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -136,34 +201,51 @@
     // The request is complete and data has been received
     // You can parse the stuff in your instance variable now
     
-    NSError *jsonParsingError;
-    NSArray *booksJsonArray = [NSJSONSerialization JSONObjectWithData:self.responseData
-                                                              options:0
-                                                                error:&jsonParsingError];
-    
-    if (!jsonParsingError)
+    if (self.responseStatusCode == 200)
     {
-        self.booksArray = [NSMutableArray new];
+        NSString *urlString = [[[connection currentRequest] URL] absoluteString];
+        NSArray *parts = [urlString componentsSeparatedByString:@"/"];
         
-        for (NSDictionary *bookDict in booksJsonArray)
+        if ([[parts lastObject] isEqualToString:@"clean"])
         {
-            BookDetails *bookDetailsItem = [BookDetails new];
-            bookDetailsItem.titleName = [bookDict objectForKey:@"title"];
-            bookDetailsItem.authorName = [bookDict objectForKey:@"author"];
-            bookDetailsItem.lastCheckedOut = [bookDict objectForKey:@"lastCheckedOut"];
-            bookDetailsItem.lastCheckedOutBy = [bookDict objectForKey:@"lastCheckedOutBy"];
-            bookDetailsItem.publisher = [bookDict objectForKey:@"publisher"];
-            bookDetailsItem.url = [bookDict objectForKey:@"url"];
-            bookDetailsItem.categories = [bookDict objectForKey:@"categories"];
-            
-            [self.booksArray addObject:bookDetailsItem];
+            self.booksArray = [NSMutableArray new];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+            return;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        NSError *jsonParsingError;
+        NSArray *booksJsonArray = [NSJSONSerialization JSONObjectWithData:self.responseData
+                                                                  options:0
+                                                                    error:&jsonParsingError];
         
+        if (!jsonParsingError)
+        {
+            self.booksArray = [NSMutableArray new];
+            
+            for (NSDictionary *bookDict in booksJsonArray)
+            {
+                BookDetails *bookDetailsItem = [BookDetails new];
+                bookDetailsItem.titleName = [bookDict objectForKey:@"title"];
+                bookDetailsItem.authorName = [bookDict objectForKey:@"author"];
+                bookDetailsItem.lastCheckedOut = [bookDict objectForKey:@"lastCheckedOut"];
+                bookDetailsItem.lastCheckedOutBy = [bookDict objectForKey:@"lastCheckedOutBy"];
+                bookDetailsItem.publisher = [bookDict objectForKey:@"publisher"];
+                bookDetailsItem.url = [bookDict objectForKey:@"url"];
+                bookDetailsItem.categories = [bookDict objectForKey:@"categories"];
+                
+                [self.booksArray addObject:bookDetailsItem];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+            
+        }
     }
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
