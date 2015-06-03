@@ -10,6 +10,9 @@
 
 @interface BookDetailsViewController : UIViewController
 
+/**
+ This is the URL for the selected book.
+ */
 @property (nonatomic, copy) NSString *selectedBookDetailsURL;
 
 @end

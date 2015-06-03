@@ -63,74 +63,6 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-#pragma mark - Private Methods
-
-- (void)retrieveBookDetails
-{
-    // Create the request.
-    
-    NSString *baseURL = @"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0";
-    NSString *requestString = [baseURL stringByAppendingString:self.selectedBookDetailsURL];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestString]];
-    
-    // Create url connection and fire request
-    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
-}
-
-- (void)shareBook
-{
-    NSString *textToShare = @"I would like to share this book details with you!";
-    NSArray *objectsToShare = @[textToShare];
-    
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
-                                                                             applicationActivities:nil];
-    
-    [self presentViewController:activityVC animated:YES completion:nil];
-}
-
-- (void)setUpBookDetails
-{
-    self.titleLabel.text = self.bookDetails.titleName;
-    self.authorLabel.text = self.bookDetails.authorName;
-    self.publisherLabel.text = [NSString stringWithFormat:@"Publisher: %@", self.bookDetails.publisher];
-    self.tagsLabel.text = [NSString stringWithFormat:@"Tags: %@", self.bookDetails.categories];
-    
-    if ([self.bookDetails.lastCheckedOut length] > 0 && [self.bookDetails.lastCheckedOutBy length] > 0)
-    {
-        NSString *combinedLastCheckoutString = [NSString stringWithFormat:@"%@ @ %@", self.bookDetails.lastCheckedOutBy,
-                                                self.bookDetails.lastCheckedOut];
-        self.lastCheckedoutLabel.text = [NSString stringWithFormat:@"Last Checked Out : %@", combinedLastCheckoutString];
-    }
-    else
-    {
-        self.lastCheckedoutLabel.text = @"Last Checked Out: ";
-    }
-
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-}
-
-- (void)checkoutBookWithName:(NSString *)name
-{
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = @"Checking Out Book";
-    
-    NSString *baseURL = @"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0";
-    NSString *requestString = [baseURL stringByAppendingString:self.selectedBookDetailsURL];
-    NSMutableURLRequest *request = [NSMutableURLRequest
-                                    requestWithURL:[NSURL URLWithString:requestString]];
-    
-    NSDictionary *requestData = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                 name, @"lastCheckedOutBy",
-                                 nil];
-    NSError *error;
-    NSData *putData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&error];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPMethod:@"PUT"];
-    [request setHTTPBody:putData];
-    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
-}
-
 #pragma mark NSURLConnection Delegate Methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -167,6 +99,8 @@
     
     if (!jsonParsingError && bookDetailDict)
     {
+        // we parse the response and update the result into the BookDetails Object.
+        
         self.bookDetails = [BookDetails new];
         
         self.bookDetails.titleName = [bookDetailDict objectForKey:@"title"];
@@ -216,11 +150,113 @@
         
         [self setUpBookDetails];
     }
+    
+    else
+    {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        // log a debug log
+        
+        [self showAlertViewWithMessage:@"Unable to display book details."];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    // The request has failed for some reason!
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     
+    if ([error code] == NSURLErrorNotConnectedToInternet)
+    {
+        [self showAlertViewWithMessage:@"Please ensure internet connection is available"];
+    }
+    else
+    {
+        [self showAlertViewWithMessage:@"Server not responding"];
+    }
+}
+
+#pragma mark - Private Methods
+
+- (void)retrieveBookDetails
+{
+    // Create the request.
+    
+    NSString *baseURL = @"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0";
+    NSString *requestString = [baseURL stringByAppendingString:self.selectedBookDetailsURL];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestString]];
+    
+    // Create url connection and fire request
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)shareBook
+{
+    NSString *textToShare = @"I would like to share this book details with you!";
+    NSArray *objectsToShare = @[textToShare];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
+                                                                             applicationActivities:nil];
+    
+    [self presentViewController:activityVC animated:YES completion:nil];
+}
+
+- (void)setUpBookDetails
+{
+    self.titleLabel.text = self.bookDetails.titleName;
+    self.authorLabel.text = self.bookDetails.authorName;
+    self.publisherLabel.text = [NSString stringWithFormat:@"Publisher: %@", self.bookDetails.publisher];
+    self.tagsLabel.text = [NSString stringWithFormat:@"Tags: %@", self.bookDetails.categories];
+    
+    if ([self.bookDetails.lastCheckedOut length] > 0 && [self.bookDetails.lastCheckedOutBy length] > 0)
+    {
+        NSString *combinedLastCheckoutString = [NSString stringWithFormat:@"%@ @ %@", self.bookDetails.lastCheckedOutBy,
+                                                self.bookDetails.lastCheckedOut];
+        self.lastCheckedoutLabel.text = [NSString stringWithFormat:@"Last Checked Out : %@", combinedLastCheckoutString];
+    }
+    else
+    {
+        self.lastCheckedoutLabel.text = @"Last Checked Out: ";
+    }
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
+- (void)checkoutBookWithName:(NSString *)name
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Checking Out Book";
+    
+    NSString *baseURL = @"http://prolific-interview.herokuapp.com/5565ed6a818b6e0009e6c2e0";
+    NSString *requestString = [baseURL stringByAppendingString:self.selectedBookDetailsURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest
+                                    requestWithURL:[NSURL URLWithString:requestString]];
+    
+    NSDictionary *requestData = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                 name, @"lastCheckedOutBy",
+                                 nil];
+    NSError *error;
+    NSData *putData = [NSJSONSerialization dataWithJSONObject:requestData options:0 error:&error];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    [request setHTTPBody:putData];
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)showAlertViewWithMessage:(NSString *)message
+{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+                                                              [self.navigationController popViewControllerAnimated:YES];
+                                                          }];
+    
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

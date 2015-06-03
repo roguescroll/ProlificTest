@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Ashwin Raghuraman. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "BooksViewController.h"
 #import "BookDetails.h"
 #import "BookDetailsViewController.h"
 #import "AddBookViewController.h"
 #import "MBProgressHUD.h"
 
-@interface ViewController ()<NSURLConnectionDelegate>
+@interface BooksViewController ()<NSURLConnectionDelegate>
 
 @property (nonatomic, strong) NSMutableData *responseData;
 
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation ViewController
+@implementation BooksViewController
 
 - (void)viewDidLoad
 {
@@ -45,7 +45,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Clear Books"
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
-                                                                             action:@selector(clearAllBooks)];
+                                                                             action:@selector(clearAllButtonPressed)];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -118,6 +118,13 @@
     {
         [self.booksArray removeObjectAtIndex:indexPath.row];
         
+        // Handling the case when the deleted row is the last row in the section.
+        if (indexPath.row == 0)
+        {
+            [tableView reloadData];
+            return;
+        }
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
@@ -132,41 +139,6 @@
         BookDetailsViewController *bookDetailsController = [segue destinationViewController];
         bookDetailsController.selectedBookDetailsURL = self.currentlySelectedBook.url;
     }
-}
-
-#pragma mark - Private Methods
-
-- (void)fetchBooksList
-{
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = @"Fetching Book Titles";
-    
-    // Create the request.
-    NSString *requestURL = [self.baseURL stringByAppendingString:@"/books"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL
-                                                          URLWithString:requestURL]];
-    
-    // Create url connection and fire request
-    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
-}
-
-- (void)addBook
-{
-    AddBookViewController *addBookController = [[AddBookViewController alloc] init];
-    [self.navigationController pushViewController:addBookController animated:YES];
-}
-
-- (void)clearAllBooks
-{
-    // Create the request
-    NSString *requestURL = [self.baseURL stringByAppendingString:@"/clean"];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    
-    [request setURL:[NSURL URLWithString:requestURL]];
-    [request setHTTPMethod:@"DELETE"];
-    
-    // Create url connection and fire request
-    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 #pragma mark NSURLConnection Delegate Methods
@@ -206,6 +178,8 @@
         NSString *urlString = [[[connection currentRequest] URL] absoluteString];
         NSArray *parts = [urlString componentsSeparatedByString:@"/"];
         
+        // This is for handling the "Delete all Books" request.
+        // we get the request string and check if we had made the "clean" request
         if ([[parts lastObject] isEqualToString:@"clean"])
         {
             self.booksArray = [NSMutableArray new];
@@ -242,15 +216,109 @@
                 [self.tableView reloadData];
             });
             
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        }
+        else
+        {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
+            // Add a debug logger to say there was a JSON parsing error, which would help with debugging.
         }
     }
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    // The request has failed for some reason!
+    // Check the error var
+    self.booksArray = nil;
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+    
+    if ([error code] == NSURLErrorNotConnectedToInternet)
+    {
+        [self showAlertViewWithMessage:@"Please ensure internet connection is available"];
+    }
+    else
+    {
+        [self showAlertViewWithMessage:@"Server not responding"];
+    }
     
 }
+
+#pragma mark - Private Methods
+
+- (void)fetchBooksList
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Fetching Book Titles";
+    
+    // Create the request.
+    NSString *requestURL = [self.baseURL stringByAppendingString:@"/books"];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL
+                                                          URLWithString:requestURL]];
+    
+    // Create url connection and fire request
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)addBook
+{
+    AddBookViewController *addBookController = [[AddBookViewController alloc] init];
+    [self.navigationController pushViewController:addBookController animated:YES];
+}
+
+- (void)clearAllButtonPressed
+{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:@"Are you sure you want to delete All Books?"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+                                                              [self clearAllBooks];
+                                                          }];
+    [alert addAction:defaultAction];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * action) {
+                                                         }];
+    [alert addAction:cancelAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)clearAllBooks
+{
+    // Create the request
+    NSString *requestURL = [self.baseURL stringByAppendingString:@"/clean"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL:[NSURL URLWithString:requestURL]];
+    [request setHTTPMethod:@"DELETE"];
+    
+    // Create url connection and fire request
+    (void)[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)showAlertViewWithMessage:(NSString *)message
+{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+                                                          }];
+    
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 
 @end

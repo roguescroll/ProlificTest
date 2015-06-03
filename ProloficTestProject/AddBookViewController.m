@@ -59,6 +59,54 @@
     }
 }
 
+#pragma mark NSURLConnection Delegate Methods
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    // A response has been received, this is where we initialize the instance var you created
+    // so that we can append data to it in the didReceiveData method
+    // Furthermore, this method is called each time there is a redirect so reinitializing it
+    // also serves to clear it
+    self.responseData = [[NSMutableData alloc] init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    // Append the new data to the instance variable you declared
+    [self.responseData appendData:data];
+}
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
+                  willCacheResponse:(NSCachedURLResponse*)cachedResponse
+{
+    // Return nil to indicate not necessary to store a cached response for this connection
+    return nil;
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // The request is complete and data has been received
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    if ([error code] == NSURLErrorNotConnectedToInternet)
+    {
+        [self showAlertViewWithMessage:@"Please ensure internet connection is available"];
+    }
+    else
+    {
+        [self showAlertViewWithMessage:@"Server not responding"];
+    }
+}
+
 #pragma mark - Private Methods
 
 - (void)doneButtonPressed
@@ -103,6 +151,7 @@
     return YES;
 }
 
+// this is for checking if the user had entered any information before hitting the Done button
 - (BOOL)fieldsNotEmpty
 {
     return (([self.titleField.text length] > 0)
@@ -123,45 +172,6 @@
     
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
-}
-
-#pragma mark NSURLConnection Delegate Methods
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    // A response has been received, this is where we initialize the instance var you created
-    // so that we can append data to it in the didReceiveData method
-    // Furthermore, this method is called each time there is a redirect so reinitializing it
-    // also serves to clear it
-    self.responseData = [[NSMutableData alloc] init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    // Append the new data to the instance variable you declared
-    [self.responseData appendData:data];
-}
-
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse*)cachedResponse
-{
-    // Return nil to indicate not necessary to store a cached response for this connection
-    return nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    // The request is complete and data has been received
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    
 }
 
 @end

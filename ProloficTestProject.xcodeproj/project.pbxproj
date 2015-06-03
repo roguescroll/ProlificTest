@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CFC20C431B1B62710008CFD6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C421B1B62710008CFD6 /* main.m */; };
 		CFC20C461B1B62710008CFD6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C451B1B62710008CFD6 /* AppDelegate.m */; };
-		CFC20C491B1B62710008CFD6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C481B1B62710008CFD6 /* ViewController.m */; };
+		CFC20C491B1B62710008CFD6 /* BooksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFC20C481B1B62710008CFD6 /* BooksViewController.m */; };
 		CFC20C4C1B1B62710008CFD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C4A1B1B62710008CFD6 /* Main.storyboard */; };
 		CFC20C4E1B1B62710008CFD6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C4D1B1B62710008CFD6 /* Images.xcassets */; };
 		CFC20C511B1B62710008CFD6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFC20C4F1B1B62710008CFD6 /* LaunchScreen.xib */; };
@@ -38,8 +38,8 @@
 		CFC20C421B1B62710008CFD6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CFC20C441B1B62710008CFD6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CFC20C451B1B62710008CFD6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		CFC20C471B1B62710008CFD6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		CFC20C481B1B62710008CFD6 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CFC20C471B1B62710008CFD6 /* BooksViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BooksViewController.h; sourceTree = "<group>"; };
+		CFC20C481B1B62710008CFD6 /* BooksViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BooksViewController.m; sourceTree = "<group>"; };
 		CFC20C4B1B1B62710008CFD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CFC20C4D1B1B62710008CFD6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		CFC20C501B1B62710008CFD6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -147,8 +147,8 @@
 		CFC20C691B1B8D190008CFD6 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CFC20C471B1B62710008CFD6 /* ViewController.h */,
-				CFC20C481B1B62710008CFD6 /* ViewController.m */,
+				CFC20C471B1B62710008CFD6 /* BooksViewController.h */,
+				CFC20C481B1B62710008CFD6 /* BooksViewController.m */,
 				CFC20C6E1B1B8EAF0008CFD6 /* BookDetailsViewController.h */,
 				CFC20C6F1B1B8EAF0008CFD6 /* BookDetailsViewController.m */,
 				CFC20C711B1BD05F0008CFD6 /* AddBookViewController.h */,
@@ -287,7 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CFC20C491B1B62710008CFD6 /* ViewController.m in Sources */,
+				CFC20C491B1B62710008CFD6 /* BooksViewController.m in Sources */,
 				CFC20C701B1B8EAF0008CFD6 /* BookDetailsViewController.m in Sources */,
 				CFC20C6D1B1B8D500008CFD6 /* BookDetails.m in Sources */,
 				CFC20C461B1B62710008CFD6 /* AppDelegate.m in Sources */,
